@@ -1,0 +1,26 @@
+name: AuroraReligions
+version: 0.0.1
+main: ru.etysoft.religions.AuroraReligions
+depend: [EasyPluginCore, AuroraUniverse]
+api-version: 1.13
+author: DanilaKisikov
+description: AuroraUniverse-Religions is a cool plugin for AuroraUniverse, that adds religions and new mechanics.
+website: etysoft.ru
+
+commands:
+  aurorareligions:
+    description: Main commands
+    aliases: [aure]
+
+permissions:
+  aurorareligions:
+    reload:
+      default: op
+      description: Can reload plugin
+    reset:
+      default: op
+      description: Can reset town religion
+
+    religion-change:
+      default: op
+      description: Can change town religion
