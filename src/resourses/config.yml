@@ -1,4 +1,4 @@
-version: 0.0.3
+version: 0.0.4
 language: russian
 
 
@@ -14,7 +14,7 @@ chunk-tax:
   chr: 1
   bud: 0.8
 
-# for effects write in format "effectName:time:level!effectName2:time:level".
+# for effects write in format "effectName:time:level/effectName2:time:level".
 # if you don't want to give any effect write "".
 event:
   kill:
@@ -23,9 +23,9 @@ event:
     bud: "REGENERATION:10:1"
 
 banned-food:
-  chr: "bread!SPEED:3:1"
-  mus: "cooked_porkchop!exp2/porkchop!exp2"
-  bud: ""
+  chr: ["BREAD!SPEED:3:1/REGENERATION:10:1"]
+  mus: ["COOKED_PORKCHOP!exp:1:20", "PORKCHOP!exp:1:20"]
+  bud: []
 
 ## Structure
 

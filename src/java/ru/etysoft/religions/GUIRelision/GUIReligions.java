@@ -195,11 +195,12 @@ public class GUIReligions {
             ItemStack text = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
                     ColorCodes.toColor(ReligionsLanguage.getColorString("gui." + i + "-" + religion)));
 
+            int finalI = i;
             Slot slot = new Slot(new SlotRunnable() {
                 @Override
                 public void run() {
                     try {
-                        createReligionStructure(religion, ReligionStructures.Types.BUD_1, player, town,
+                        createReligionStructure(religion, "religion-structure-" + religion + "-" + finalI, player, town,
                                 AuroraReligions.getInstance().getConfig().getDouble(religion + "-price"));
                     } catch (StructureException e) {
                         Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);

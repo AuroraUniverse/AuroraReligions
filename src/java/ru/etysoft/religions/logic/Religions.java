@@ -58,25 +58,25 @@ public class Religions {
 
             // BannedFood
 
-            String[] chrBanned = AuroraReligions.getInstance().getConfig().getString("banned-food.chr").split("/");
-            String[] musBanned = AuroraReligions.getInstance().getConfig().getString("banned-food.mus").split("/");
-            String[] budBanned = AuroraReligions.getInstance().getConfig().getString("banned-food.bud").split("/");
+            List<String> chrBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.chr");
+            List<String> musBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.mus");
+            List<String> budBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.bud");
 
-            if (!chrBanned[0].equals("")) {
+            if (chrBanned.size() > 0) {
                 for (String food: chrBanned) {
                     String[] food1 = food.split("!");
                     bannedFoodChr.put(food1[0], food1[1]);
                 }
             }
 
-            if (!musBanned[0].equals("")) {
+            if (musBanned.size() > 0) {
                 for (String food: musBanned) {
                     String[] food1 = food.split("!");
                     bannedFoodMus.put(food1[0], food1[1]);
                 }
             }
 
-            if (!budBanned[0].equals("")) {
+            if (budBanned.size() > 0) {
                 for (String food: budBanned) {
                     String[] food1 = food.split("!");
                     bannedFoodBud.put(food1[0], food1[1]);
@@ -141,14 +141,20 @@ public class Religions {
     public static void giveEffectOnPlayer(Player player, String string) {
 
         if (string.contains("exp")) {
-            int force = Integer.parseInt(string.replace("exp", ""));
-            player.getWorld().createExplosion(player.getLocation(), force);
-            player.setHealth(0);
-            LoggerReligions.info(player.getName() + " exploded 'cause he ate ");
-        }
+            String[] str = string.split(":");
 
-        if (string.contains(":")){
-            String[] bidString = string.split("!");
+            Random random = new Random();
+            int rand = random.nextInt(100);
+            int a = Integer.parseInt(str[2]);
+
+            if (rand < a) {
+                int force = Integer.parseInt(str[1]);
+                player.getWorld().createExplosion(player.getLocation(), force);
+                player.setHealth(0);
+                LoggerReligions.info(player.getName() + " exploded 'cause he ate ");
+            }
+        } else {
+            String[] bidString = string.split("/");
             for (String oneEffect: bidString) {
                 String[] oneEffectStrings = oneEffect.split(":");
                 LoggerReligions.info(player.getName() + " took effect " + oneEffect);
