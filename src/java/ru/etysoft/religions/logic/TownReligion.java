@@ -1,6 +1,5 @@
 package ru.etysoft.religions.logic;
 
-import org.bukkit.Location;
 import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
 import ru.etysoft.aurorauniverse.structures.Structure;
 import ru.etysoft.aurorauniverse.world.Town;

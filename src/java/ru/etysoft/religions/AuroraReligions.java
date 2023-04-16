@@ -6,8 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.etysoft.aurorauniverse.AuroraUniverse;
-import ru.etysoft.aurorauniverse.Logger;
 import ru.etysoft.aurorauniverse.utils.Messaging;
 import ru.etysoft.religions.commands.ReligionCommands;
 import ru.etysoft.religions.data.ReligionsData;

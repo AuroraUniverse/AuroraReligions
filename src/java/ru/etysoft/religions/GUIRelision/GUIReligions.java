@@ -8,7 +8,6 @@ import ru.etysoft.aurorauniverse.events.GUITownOpenEvent;
 import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
 import ru.etysoft.religions.LoggerReligions;
 import ru.etysoft.religions.AuroraReligions;
-import ru.etysoft.religions.commands.ReligionChangeCommand;
 import ru.etysoft.religions.exceptions.StructureException;
 import ru.etysoft.religions.logic.ReligionStructures;
 import ru.etysoft.religions.logic.Religions;
@@ -57,6 +56,7 @@ public class GUIReligions {
                 @Override
                 public void onRightClicked(Player player, GUITable guiTable) {
                     if (sender.hasPermission("town.toggle.*")) {
+                        //townReligion.getStructure().destroy();
                         Religions.deleteTownReligion(town);
                         town.sendMessage(ReligionsLanguage.getColorString("religion-deleted"));
                         player.closeInventory();
@@ -129,21 +129,21 @@ public class GUIReligions {
         Slot chrSlot = new Slot(new SlotRunnable() {
             @Override
             public void run() {
-                GUIchrSelect(player, sender, town);
+                GUISelect(player, sender, town, "chr");
             }
         }, chr);
 
         Slot musSlot = new Slot(new SlotRunnable() {
             @Override
             public void run() {
-                GUImusSelect(player, sender, town);
+                GUISelect(player, sender, town, "mus");
             }
         }, mus);
 
         Slot budSlot = new Slot(new SlotRunnable() {
             @Override
             public void run() {
-                GUIbudSelect(player, sender, town);
+                GUISelect(player, sender, town, "bud");
             }
         }, bud);
 
@@ -164,143 +164,32 @@ public class GUIReligions {
 
     }
 
-    private static void GUIchrSelect(Player player, CommandSender sender, Town town) {
-        ItemStack chr1 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.first-chr")));
-        ItemStack chr2 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.second-chr")));
-
-        Slot slot1 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("chr", ReligionStructures.Types.CHR_1, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("chr-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, chr1);
-
-        Slot slot2 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("chr", ReligionStructures.Types.CHR_2, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("chr-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, chr2);
-
+    private static void GUISelect(Player player, CommandSender sender, Town town, String religion) {
         HashMap<Integer, Slot> matrix = new HashMap<>();
 
-        matrix.put(1, slot1);
-        matrix.put(2, slot2);
+        for (int i = 1; i < 10; i++) {
+            String newPath = AuroraReligions.getLanguage() + ".gui." + i + "-" + religion;
+            if (!AuroraReligions.getInstance().getConfig().isString(newPath)) break;
 
-        try {
-            GUITable guiTable = new GUITable(ReligionsLanguage.getColorString("gui.title"), 1, matrix,
-                    AuroraReligions.getInstance(), Material.AIR, true);
-            guiTable.open(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LoggerReligions.error(player.getName() + " can't open GUIChrSelect");
+            ItemStack text = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
+                    ColorCodes.toColor(ReligionsLanguage.getColorString("gui." + i + "-" + religion)));
+
+            Slot slot = new Slot(new SlotRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        createReligionStructure(religion, ReligionStructures.Types.BUD_1, player, town,
+                                AuroraReligions.getInstance().getConfig().getDouble(religion + "-price"));
+                    } catch (StructureException e) {
+                        Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
+                    } catch (WorldNotFoundedException e) {
+                        LoggerReligions.error("Structure create. WorldNotFoundedException");
+                    }
+                }
+            }, text);
+
+            matrix.put(i, slot);
         }
-
-    }
-
-    private static void GUImusSelect(Player player, CommandSender sender, Town town) {
-        ItemStack mus1 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.first-mus")));
-        ItemStack mus2 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.second-mus")));
-
-        Slot slot1 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("mus", ReligionStructures.Types.MUS_1, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("mus-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, mus1);
-
-        Slot slot2 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("mus", ReligionStructures.Types.MUS_2, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("mus-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, mus2);
-
-        HashMap<Integer, Slot> matrix = new HashMap<>();
-
-        matrix.put(1, slot1);
-        matrix.put(2, slot2);
-
-        try {
-            GUITable guiTable = new GUITable(ReligionsLanguage.getColorString("gui.title"), 1, matrix,
-                    AuroraReligions.getInstance(), Material.AIR, true);
-            guiTable.open(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LoggerReligions.error(player.getName() + " can't open GUIMusSelect");
-        }
-    }
-
-    private static void GUIbudSelect(Player player, CommandSender sender, Town town) {
-        ItemStack bud1 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.first-bud")));
-        ItemStack bud2 = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.second-bud")));
-
-        Slot slot1 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("bud", ReligionStructures.Types.BUD_1, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("bud-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, bud1);
-
-        Slot slot2 = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                try {
-                    createReligionStructure("bud", ReligionStructures.Types.BUD_2, player, town,
-                            AuroraReligions.getInstance().getConfig().getDouble("bud-price"));
-                } catch (StructureException e) {
-                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString(e.getCode()), player);
-                } catch (WorldNotFoundedException e) {
-                    LoggerReligions.error("Structure create. WorldNotFoundedException");
-                }
-            }
-        }, bud2);
-
-        HashMap<Integer, Slot> matrix = new HashMap<>();
-
-        matrix.put(1, slot1);
-        matrix.put(2, slot2);
 
         try {
             GUITable guiTable = new GUITable(ReligionsLanguage.getColorString("gui.title"), 1, matrix,

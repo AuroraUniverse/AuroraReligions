@@ -1,40 +1,24 @@
 package ru.etysoft.religions.listener;
 
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import ru.etysoft.aurorauniverse.data.Residents;
-import ru.etysoft.aurorauniverse.data.Towns;
 import ru.etysoft.aurorauniverse.events.*;
 import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
-import ru.etysoft.aurorauniverse.world.ChunkPair;
-import ru.etysoft.aurorauniverse.world.Region;
 import ru.etysoft.aurorauniverse.world.Town;
 import ru.etysoft.religions.GUIRelision.GUIReligions;
 import ru.etysoft.religions.LoggerReligions;
 import ru.etysoft.religions.AuroraReligions;
-import ru.etysoft.religions.events.TempleBrokenEvent;
-import ru.etysoft.religions.events.TempleRebuiltEvent;
 import ru.etysoft.religions.logic.Religions;
 import ru.etysoft.aurorauniverse.world.Resident;
 import ru.etysoft.religions.logic.TownReligion;
-
-import javax.swing.*;
-import java.util.Objects;
 
 public class ReligionListener implements Listener {
 
@@ -48,8 +32,7 @@ public class ReligionListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        if (!(player.getKiller() instanceof Player)) return;
-
+        if (!(player instanceof Player)) return;
 
         Player killer = player.getKiller();
         Resident resident = Residents.getResident(killer.getName());
@@ -69,14 +52,13 @@ public class ReligionListener implements Listener {
         if (string == null | string.equals("")) return;
 
         Religions.giveEffectOnPlayer(killer, string);
-
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onEating(PlayerInteractEvent event) {
 
         Action action = event.getAction();
-        if (!action.equals(Action.RIGHT_CLICK_AIR)) return;
+        //if (!action.equals(Action.RIGHT_CLICK_AIR)) return;
 
         Player player = event.getPlayer();
 
@@ -109,16 +91,19 @@ public class ReligionListener implements Listener {
 
         String effectName = Religions.getBannedFood(religion).get(itemName);
 
-        if (effectName.contains("exp")) {
-            int force = Integer.parseInt(effectName.replace("exp", ""));
-            player.getWorld().createExplosion(player.getLocation(), force);
-            player.setHealth(0);
-            LoggerReligions.info(player.getName() + " exploded 'cause he ate " + itemName);
-        }
+        Religions.giveEffectOnPlayer(player, effectName);
+        LoggerReligions.info("oooooooooooo");
 
-        if (effectName.contains(":")){
-            Religions.giveEffectOnPlayer(player, effectName);
-        }
+//        if (effectName.contains("exp")) {
+//            int force = Integer.parseInt(effectName.replace("exp", ""));
+//            player.getWorld().createExplosion(player.getLocation(), force);
+//            player.setHealth(0);
+//            LoggerReligions.info(player.getName() + " exploded 'cause he ate " + itemName);
+//        }
+//
+//        if (effectName.contains(":")){
+//            Religions.giveEffectOnPlayer(player, effectName);
+//        }
 
     }
 
@@ -164,7 +149,6 @@ public class ReligionListener implements Listener {
             townReligion.isStructureFullBuilt(town);
         }
     }
-
 
 //    @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
 //    public void onEat()

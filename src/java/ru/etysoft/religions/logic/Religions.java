@@ -139,19 +139,29 @@ public class Religions {
     }
 
     public static void giveEffectOnPlayer(Player player, String string) {
-        String[] bidString = string.split("!");
 
-        for (String oneEffect: bidString) {
-            String[] oneEffectStrings = oneEffect.split(":");
-            LoggerReligions.info(player.getName() + " took effect " + oneEffect);
-
-            String effectName = oneEffectStrings[0];
-            int timeOfEffect = Integer.parseInt(oneEffectStrings[1]) * 20;
-            int levelOfEffect = Integer.parseInt(oneEffectStrings[2]);
-
-            player.addPotionEffect(new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName(effectName)),
-                    timeOfEffect, levelOfEffect));
+        if (string.contains("exp")) {
+            int force = Integer.parseInt(string.replace("exp", ""));
+            player.getWorld().createExplosion(player.getLocation(), force);
+            player.setHealth(0);
+            LoggerReligions.info(player.getName() + " exploded 'cause he ate ");
         }
+
+        if (string.contains(":")){
+            String[] bidString = string.split("!");
+            for (String oneEffect: bidString) {
+                String[] oneEffectStrings = oneEffect.split(":");
+                LoggerReligions.info(player.getName() + " took effect " + oneEffect);
+
+                String effectName = oneEffectStrings[0];
+                int timeOfEffect = Integer.parseInt(oneEffectStrings[1]) * 20;
+                int levelOfEffect = Integer.parseInt(oneEffectStrings[2]);
+
+                player.addPotionEffect(new PotionEffect(Objects.requireNonNull(PotionEffectType.getByName(effectName)),
+                        timeOfEffect, levelOfEffect));
+            }
+        }
+
     }
 
 }

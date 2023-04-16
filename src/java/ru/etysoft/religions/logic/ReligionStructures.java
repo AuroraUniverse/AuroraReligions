@@ -7,7 +7,6 @@ import ru.etysoft.aurorauniverse.data.Residents;
 import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
 import ru.etysoft.aurorauniverse.structures.Structure;
 import ru.etysoft.aurorauniverse.structures.StructureBuildException;
-import ru.etysoft.aurorauniverse.utils.AuroraLanguage;
 import ru.etysoft.aurorauniverse.utils.Messaging;
 import ru.etysoft.aurorauniverse.world.Resident;
 import ru.etysoft.aurorauniverse.world.Town;

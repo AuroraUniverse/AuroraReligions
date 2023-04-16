@@ -17,14 +17,14 @@ public class ReligionsLanguage {
             } else {
                 LoggerReligions.warning("Can't get string " + fullPath + " in language file, trying default value!");
                 try {
-                    String result = AuroraReligions.getInstance().getConfig().getDefaults().getString(fullPath);
+                    String result = AuroraReligions.getInstance().getConfig().getString(fullPath);
                     if (result != null) {
-
                         return result;
                     } else {
                         LoggerReligions.error("Can't find default string with path " + fullPath);
                         return ColorCodes.toColor("&cWrong path to String!");
                     }
+
                 } catch (Exception e) {
                     LoggerReligions.error("Can't find default string with path " + fullPath + " (NullPointerException)");
                     return ColorCodes.toColor("&cWrong path to translation (" + fullPath + ")");
