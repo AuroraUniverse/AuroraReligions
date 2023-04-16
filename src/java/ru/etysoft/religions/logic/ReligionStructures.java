@@ -42,7 +42,7 @@ public class ReligionStructures {
                             town.sendMessage(ReligionsLanguage.getColorString("new-" + religion + "-town"));
                             player.closeInventory();
 
-
+                            LoggerReligions.info(player.getName() + " created " + religion + " religion in " + town.getName());
                         }
                     });
                 } catch (StructureBuildException e) {

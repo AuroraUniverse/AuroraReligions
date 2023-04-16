@@ -4,8 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ru.etysoft.aurorauniverse.Logger;
 import ru.etysoft.aurorauniverse.events.GUITownOpenEvent;
 import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
+import ru.etysoft.aurorauniverse.structures.StructureBuildException;
+import ru.etysoft.aurorauniverse.utils.AuroraLanguage;
 import ru.etysoft.religions.LoggerReligions;
 import ru.etysoft.religions.AuroraReligions;
 import ru.etysoft.religions.exceptions.StructureException;
@@ -56,10 +59,28 @@ public class GUIReligions {
                 @Override
                 public void onRightClicked(Player player, GUITable guiTable) {
                     if (sender.hasPermission("town.toggle.*")) {
-                        //townReligion.getStructure().destroy();
+                        try {
+                            townReligion.getStructure().destroy(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString("structure-destroy-finished"), player);
+                                }
+                            }, new Runnable() {
+                                @Override
+                                public void run() {
+                                    LoggerReligions.error("Error destroying wrong structure!");
+                                }
+                            }, true);
+                        } catch (WorldNotFoundedException e) {
+                            throw new RuntimeException(e);
+                        } catch (StructureBuildException e) {
+                            throw new RuntimeException(e);
+                        }
                         Religions.deleteTownReligion(town);
                         town.sendMessage(ReligionsLanguage.getColorString("religion-deleted"));
                         player.closeInventory();
+
+                        LoggerReligions.info(player.getName() + " deleted religion of " + town.getName());
                     }
                 }
 

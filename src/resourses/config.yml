@@ -1,4 +1,4 @@
-version: 0.0.2
+version: 0.0.3
 language: russian
 
 
@@ -75,3 +75,5 @@ russian:
   structure-error-chunk: "&fХрам должен располагаться в одном чанке внутри вашего города!"
   structure-error-place: "&fТерритория должна быть расчищена!"
   structure-error-religion-exists: "&fУ вашего города уже сть религия!"
+
+  structure-destroy-finished: "&fСтруктура была удалена!"
