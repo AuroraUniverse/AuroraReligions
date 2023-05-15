@@ -1,5 +1,6 @@
 package ru.etysoft.religions.utils;
 
+import ru.etysoft.aurorauniverse.world.Town;
 import ru.etysoft.religions.LoggerReligions;
 import ru.etysoft.religions.AuroraReligions;
 import ru.etysoft.aurorauniverse.utils.ColorCodes;
@@ -35,5 +36,11 @@ public class ReligionsLanguage {
         {
             return ColorCodes.toColor("&cConfig string error!");
         }
+    }
+
+    public static void sendTownMessage(Town town, String text) {
+        String message = AuroraReligions.getPrefix() + " " + text;
+
+        town.sendMessage(message);
     }
 }

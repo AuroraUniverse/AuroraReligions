@@ -1,4 +1,4 @@
-version: 0.0.4
+version: 0.1.1
 language: russian
 
 
@@ -13,6 +13,24 @@ chunk-tax:
   mus: 1
   chr: 1
   bud: 0.8
+
+# GUI icons
+
+materials:
+  main: "TOTEM_OF_UNDYING"
+
+  chr-main: "WHEAT"
+  mus-main: "GOLDEN_SWORD"
+  bud-main: "NETHER_STAR"
+
+  chr-1: "LAPIS_BLOCK"
+  chr-2: "GOLD_BLOCK"
+
+  mus-1: "IRON_BLOCK"
+  mus-2: "NETHER_BRICK"
+
+  bud-1: "GLASS"
+  bud-2: "ENCHANTED_BOOK"
 
 # for effects write in format "effectName:time:level/effectName2:time:level".
 # if you don't want to give any effect write "".
@@ -44,7 +62,7 @@ russian:
     lore: "&7Чтобы удалить религию нажмите ПКМ (снова покупать)"
     lore-buy: "&7Нажмите ЛКМ для открытия меню покупки религии"
     lore-price: "&7Стоимость - %s"
-    title: "&fМеню выбора религии"
+    title: "&8Меню выбора религии"
 
     rebuild-temple: "ВОССТАНОВИТЕ ХРАМ!"
 
@@ -77,3 +95,4 @@ russian:
   structure-error-religion-exists: "&fУ вашего города уже сть религия!"
 
   structure-destroy-finished: "&fСтруктура была удалена!"
+

@@ -1,5 +1,5 @@
 name: AuroraReligions
-version: 0.1.0
+version: 0.1.1
 main: ru.etysoft.religions.AuroraReligions
 depend: [EasyPluginCore, AuroraUniverse]
 api-version: 1.13
@@ -14,6 +14,10 @@ commands:
 
 permissions:
   aurorareligions:
+    info:
+      default: op
+      description: Can get info about plugin
+
     reload:
       default: op
       description: Can reload plugin

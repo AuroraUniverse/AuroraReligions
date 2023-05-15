@@ -16,6 +16,8 @@ public class ReligionCommands implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("change")) {
                 new ReligionChangeCommand(commandSender, args);
             }
+        } else {
+            new AureInfoCommand(commandSender);
         }
 
         return true;

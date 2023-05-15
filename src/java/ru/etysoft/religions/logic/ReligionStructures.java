@@ -39,7 +39,7 @@ public class ReligionStructures {
                         @Override
                         public void run() {
                             Religions.createTownReligion(town, religion, structure);
-                            town.sendMessage(ReligionsLanguage.getColorString("new-" + religion + "-town"));
+                            ReligionsLanguage.sendTownMessage(town, ReligionsLanguage.getColorString("new-" + religion + "-town"));
                             player.closeInventory();
 
                             LoggerReligions.info(player.getName() + " created " + religion + " religion in " + town.getName());
@@ -50,7 +50,7 @@ public class ReligionStructures {
                 }
             } else {
                 Religions.createTownReligion(town, religion, structure);
-                town.sendMessage(ReligionsLanguage.getColorString("new-" + religion + "-town"));
+                ReligionsLanguage.sendTownMessage(town, ReligionsLanguage.getColorString("new-" + religion + "-town"));
                 player.closeInventory();
             }
         } else {
@@ -58,16 +58,16 @@ public class ReligionStructures {
         }
     }
 
-    public static class Types {
-        public static final String CHR_1 = "religion-structure-chr-1";
-        public static final String CHR_2 = "religion-structure-chr-2";
-
-        public static final String MUS_1 = "religion-structure-mus-1";
-        public static final String MUS_2 = "religion-structure-mus-2";
-
-        public static final String BUD_1 = "religion-structure-bud-1";
-        public static final String BUD_2 = "religion-structure-bud-2";
-
-    }
+//    public static class Types {
+//        public static final String CHR_1 = "religion-structure-chr-1";
+//        public static final String CHR_2 = "religion-structure-chr-2";
+//
+//        public static final String MUS_1 = "religion-structure-mus-1";
+//        public static final String MUS_2 = "religion-structure-mus-2";
+//
+//        public static final String BUD_1 = "religion-structure-bud-1";
+//        public static final String BUD_2 = "religion-structure-bud-2";
+//
+//    }
 
 }

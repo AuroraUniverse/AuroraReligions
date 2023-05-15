@@ -41,13 +41,15 @@ public class GUIReligions {
         if (townReligion != null) {
             ItemStack stack;
             if (townReligion.isStructureFullBuilt(town)) {
-                stack = Items.createNamedItem(new ItemStack(Material.TOTEM_OF_UNDYING, 1),
+                stack = Items.createNamedItem(new ItemStack(
+                        Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.main")), 1),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("religion")),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("gui.town-religion").replace
                                 ("%s", ReligionsLanguage.getColorString(townReligion.getReligion()))),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore")));
             } else {
-                stack = Items.createNamedItem(new ItemStack(Material.TOTEM_OF_UNDYING, 1),
+                stack = Items.createNamedItem(new ItemStack(
+                        Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.main")), 1),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("religion")),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("gui.rebuild-temple")),
                         ColorCodes.toColor(ReligionsLanguage.getColorString("gui.town-religion").replace
@@ -77,10 +79,12 @@ public class GUIReligions {
                             throw new RuntimeException(e);
                         }
                         Religions.deleteTownReligion(town);
-                        town.sendMessage(ReligionsLanguage.getColorString("religion-deleted"));
+                        ReligionsLanguage.sendTownMessage(town, ReligionsLanguage.getColorString("religion-deleted"));
                         player.closeInventory();
 
                         LoggerReligions.info(player.getName() + " deleted religion of " + town.getName());
+                    } else {
+                        Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString("wrong-access"), player);
                     }
                 }
 
@@ -101,7 +105,8 @@ public class GUIReligions {
 
 
         } else {
-            ItemStack stack = Items.createNamedItem(new ItemStack(Material.TOTEM_OF_UNDYING, 1),
+            ItemStack stack = Items.createNamedItem(new ItemStack(
+                    Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.main")), 1),
                     ColorCodes.toColor(ReligionsLanguage.getColorString("religion")),
                     ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-buy")));
 
@@ -115,6 +120,8 @@ public class GUIReligions {
                 public void onLeftClicked(Player player, GUITable guiTable) {
                     if (sender.hasPermission("town.toggle.*")) {
                         GUIReligionBuy(player, sender, town);
+                    } else {
+                        Messaging.sendPrefixedMessage(ReligionsLanguage.getColorString("wrong-access"), player);
                     }
                 }
 
@@ -132,17 +139,20 @@ public class GUIReligions {
 
     private static void GUIReligionBuy(Player player, CommandSender sender, Town town) {
 
-        ItemStack chr = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
+        ItemStack chr = Items.createNamedItem(new ItemStack(
+                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.chr-main")), 1),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("chr")),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
                         .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("chr-price")))));
 
-        ItemStack mus = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
+        ItemStack mus = Items.createNamedItem(new ItemStack(
+                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.mus-main")), 1),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("mus")),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
                         .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("mus-price")))));
 
-        ItemStack bud = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
+        ItemStack bud = Items.createNamedItem(new ItemStack(
+                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.bud-main")), 1),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("bud")),
                 ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
                         .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("bud-price")))));
@@ -192,7 +202,8 @@ public class GUIReligions {
             String newPath = AuroraReligions.getLanguage() + ".gui." + i + "-" + religion;
             if (!AuroraReligions.getInstance().getConfig().isString(newPath)) break;
 
-            ItemStack text = Items.createNamedItem(new ItemStack(Material.COBBLESTONE, 1),
+            ItemStack text = Items.createNamedItem(new ItemStack(
+                    Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials." + religion + "-" + i)), 1),
                     ColorCodes.toColor(ReligionsLanguage.getColorString("gui." + i + "-" + religion)));
 
             int finalI = i;
