@@ -15,20 +15,29 @@ public class Religions {
 
     private static HashMap<String, TownReligion> religionsOfTowns = new HashMap<>();
 
-    private static HashMap<String, String> bannedFoodChr = new HashMap<>();
-    private static HashMap<String, String> bannedFoodMus = new HashMap<>();
-    private static HashMap<String, String> bannedFoodBud = new HashMap<>();
+//    private static HashMap<String, String> bannedFoodChr = new HashMap<>();
+//    private static HashMap<String, String> bannedFoodMus = new HashMap<>();
+//    private static HashMap<String, String> bannedFoodBud = new HashMap<>();
 
-    public static final List<String> religionNames = Arrays.asList("chr", "mus", "bud");
+    private static HashMap<String, HashMap<String, String>> bannedFood = new HashMap<>();
+
+    public static List<String> religionNames = new ArrayList<>();
 
     public static HashMap<String, TownReligion> getReligionsOfTowns() {
         return religionsOfTowns;
     }
 
     public static HashMap<String, String> getBannedFood(String religion) {
-        if (religion.equals("chr")) return bannedFoodChr;
-        if (religion.equals("mus")) return bannedFoodMus;
-        return bannedFoodBud;
+        return bannedFood.get(religion);
+    }
+
+    public static boolean isBannedFood(String name) {
+        for (String religionName: religionNames) {
+            if (bannedFood.get(religionName).containsKey(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean initialiseReligions() {
@@ -36,6 +45,9 @@ public class Religions {
         boolean status = true;
 
         try {
+            List<String> religions = AuroraReligions.getInstance().getConfig().getStringList("religions");
+            religionNames.addAll(religions);
+
             for (Town town: Towns.getTowns()) {
 
                 if (religionsOfTowns.containsKey(town.getName()))
@@ -58,30 +70,42 @@ public class Religions {
 
             // BannedFood
 
-            List<String> chrBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.chr");
-            List<String> musBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.mus");
-            List<String> budBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.bud");
+            for (String religionName: religionNames) {
+                bannedFood.put(religionName, new HashMap<>());
+                List<String> banned = AuroraReligions.getInstance().getConfig().getStringList("banned-food." + religionName);
 
-            if (chrBanned.size() > 0) {
-                for (String food: chrBanned) {
-                    String[] food1 = food.split("!");
-                    bannedFoodChr.put(food1[0], food1[1]);
+                if (banned.size() > 0) {
+                    for (String food: banned) {
+                        String[] food1 = food.split("!");
+                        bannedFood.get(religionName).put(food1[0], food1[1]);
+                    }
                 }
             }
 
-            if (musBanned.size() > 0) {
-                for (String food: musBanned) {
-                    String[] food1 = food.split("!");
-                    bannedFoodMus.put(food1[0], food1[1]);
-                }
-            }
-
-            if (budBanned.size() > 0) {
-                for (String food: budBanned) {
-                    String[] food1 = food.split("!");
-                    bannedFoodBud.put(food1[0], food1[1]);
-                }
-            }
+//            List<String> chrBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.chr");
+//            List<String> musBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.mus");
+//            List<String> budBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.bud");
+//
+//            if (chrBanned.size() > 0) {
+//                for (String food: chrBanned) {
+//                    String[] food1 = food.split("!");
+//                    bannedFoodChr.put(food1[0], food1[1]);
+//                }
+//            }
+//
+//            if (musBanned.size() > 0) {
+//                for (String food: musBanned) {
+//                    String[] food1 = food.split("!");
+//                    bannedFoodMus.put(food1[0], food1[1]);
+//                }
+//            }
+//
+//            if (budBanned.size() > 0) {
+//                for (String food: budBanned) {
+//                    String[] food1 = food.split("!");
+//                    bannedFoodBud.put(food1[0], food1[1]);
+//                }
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();

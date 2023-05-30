@@ -1,9 +1,11 @@
-version: 0.1.1
+version: 0.1.2
 language: russian
 
 
 
 ## Config
+
+religions: ["chr", "mus", "bud"]
 
 chr-price: 5000
 mus-price: 5000

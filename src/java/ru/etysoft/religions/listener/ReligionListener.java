@@ -118,9 +118,7 @@ public class ReligionListener implements Listener {
 
         String itemName = item.getType().name();
 
-        if (!Religions.getBannedFood("chr").containsKey(itemName) &
-                !Religions.getBannedFood("mus").containsKey(itemName) &
-                !Religions.getBannedFood("bud").containsKey(itemName)) return;
+        if (!Religions.isBannedFood(itemName)) return;
 
         Resident resident = Residents.getResident(player.getName());
 

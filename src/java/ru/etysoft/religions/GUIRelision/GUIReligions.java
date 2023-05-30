@@ -139,50 +139,66 @@ public class GUIReligions {
 
     private static void GUIReligionBuy(Player player, CommandSender sender, Town town) {
 
-        ItemStack chr = Items.createNamedItem(new ItemStack(
-                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.chr-main")), 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("chr")),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
-                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("chr-price")))));
-
-        ItemStack mus = Items.createNamedItem(new ItemStack(
-                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.mus-main")), 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("mus")),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
-                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("mus-price")))));
-
-        ItemStack bud = Items.createNamedItem(new ItemStack(
-                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.bud-main")), 1),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("bud")),
-                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
-                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("bud-price")))));
-
-        Slot chrSlot = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                GUISelect(player, sender, town, "chr");
-            }
-        }, chr);
-
-        Slot musSlot = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                GUISelect(player, sender, town, "mus");
-            }
-        }, mus);
-
-        Slot budSlot = new Slot(new SlotRunnable() {
-            @Override
-            public void run() {
-                GUISelect(player, sender, town, "bud");
-            }
-        }, bud);
-
         HashMap<Integer, Slot> matrix = new HashMap<>();
 
-        matrix.put(1, chrSlot);
-        matrix.put(5, musSlot);
-        matrix.put(9, budSlot);
+        int i = 1;
+
+        for (String religionName: Religions.religionNames) {
+            ItemStack thisReligion = Items.createNamedItem(new ItemStack(
+                    Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials." + religionName + "-main")), 1),
+                    ColorCodes.toColor(ReligionsLanguage.getColorString(religionName)),
+                    ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
+                            .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble( religionName + "-price")))));
+
+            Slot chrSlot = new Slot(new SlotRunnable() {
+                @Override
+                public void run() {
+                    GUISelect(player, sender, town, religionName);
+                }
+            }, thisReligion);
+
+            matrix.put(i, chrSlot);
+            i++;
+        }
+
+//        ItemStack chr = Items.createNamedItem(new ItemStack(
+//                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.chr-main")), 1),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("chr")),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
+//                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("chr-price")))));
+//
+//        ItemStack mus = Items.createNamedItem(new ItemStack(
+//                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.mus-main")), 1),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("mus")),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
+//                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("mus-price")))));
+//
+//        ItemStack bud = Items.createNamedItem(new ItemStack(
+//                Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials.bud-main")), 1),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("bud")),
+//                ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
+//                        .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble("bud-price")))));
+//
+//        Slot chrSlot = new Slot(new SlotRunnable() {
+//            @Override
+//            public void run() {
+//                GUISelect(player, sender, town, "chr");
+//            }
+//        }, chr);
+//
+//        Slot musSlot = new Slot(new SlotRunnable() {
+//            @Override
+//            public void run() {
+//                GUISelect(player, sender, town, "mus");
+//            }
+//        }, mus);
+//
+//        Slot budSlot = new Slot(new SlotRunnable() {
+//            @Override
+//            public void run() {
+//                GUISelect(player, sender, town, "bud");
+//            }
+//        }, bud);
 
         try {
             GUITable guiTable = new GUITable(ReligionsLanguage.getColorString("gui.title"), 1, matrix,
