@@ -58,16 +58,4 @@ public class ReligionStructures {
         }
     }
 
-//    public static class Types {
-//        public static final String CHR_1 = "religion-structure-chr-1";
-//        public static final String CHR_2 = "religion-structure-chr-2";
-//
-//        public static final String MUS_1 = "religion-structure-mus-1";
-//        public static final String MUS_2 = "religion-structure-mus-2";
-//
-//        public static final String BUD_1 = "religion-structure-bud-1";
-//        public static final String BUD_2 = "religion-structure-bud-2";
-//
-//    }
-
 }

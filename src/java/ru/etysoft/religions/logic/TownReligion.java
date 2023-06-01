@@ -44,15 +44,19 @@ public class TownReligion {
         this.structure = structure;
     }
 
-    public boolean isStructureFullBuilt(Town town) {
+    public boolean updateReligionTax(Town town) {
+        if (!this.isStructureFullBuild()) {
+            town.setTownChunkTaxMultiplier(AuroraReligions.getInstance().getDescription().getName(), 1);
+            return false;
+        } else {
+            Religions.setMultipliers(town, religion);
+            return true;
+        }
+    }
+
+    public boolean isStructureFullBuild() {
         try {
-            if (!structure.isFullBuilt()) {
-                town.setTownChunkTaxMultiplier(AuroraReligions.getInstance().getDescription().getName(), 1);
-                return false;
-            } else {
-                Religions.setMultipliers(town, religion);
-                return true;
-            }
+            return structure.isFullBuilt();
         } catch (WorldNotFoundedException e) {
             e.printStackTrace();
             return false;

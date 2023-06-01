@@ -1,4 +1,4 @@
-version: 0.1.2
+version: 0.1.3
 language: russian
 
 
@@ -42,9 +42,17 @@ event:
     mus: "INCREASE_DAMAGE:10:1"
     bud: "REGENERATION:10:1"
 
+# ItemStack!EffectName:time(s):LVL
 banned-food:
   chr: ["BREAD!SPEED:3:1/REGENERATION:10:1"]
   mus: ["COOKED_PORKCHOP!exp:1:20", "PORKCHOP!exp:1:20"]
+  bud: []
+
+
+# ItemStack!Enchantment:LVL:cost:possibility
+enchantments:
+  chr: ["BREAD!sharpness:10:30:100", "GOLDEN_SWORD!sharpness:10:30:50", "IRON_SWORD!mending:1:30:50"]
+  mus: []
   bud: []
 
 ## Structure

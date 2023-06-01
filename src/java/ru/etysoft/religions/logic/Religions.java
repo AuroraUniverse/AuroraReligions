@@ -1,13 +1,19 @@
 package ru.etysoft.religions.logic;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import ru.etysoft.aurorauniverse.Logger;
 import ru.etysoft.aurorauniverse.data.Towns;
 import ru.etysoft.aurorauniverse.structures.Structure;
 import ru.etysoft.religions.LoggerReligions;
 import ru.etysoft.religions.AuroraReligions;
 import ru.etysoft.aurorauniverse.world.Town;
+import ru.etysoft.religions.enchantments.Offer;
+import ru.etysoft.religions.utils.ReligionsLanguage;
 
 import java.util.*;
 
@@ -15,11 +21,9 @@ public class Religions {
 
     private static HashMap<String, TownReligion> religionsOfTowns = new HashMap<>();
 
-//    private static HashMap<String, String> bannedFoodChr = new HashMap<>();
-//    private static HashMap<String, String> bannedFoodMus = new HashMap<>();
-//    private static HashMap<String, String> bannedFoodBud = new HashMap<>();
-
     private static HashMap<String, HashMap<String, String>> bannedFood = new HashMap<>();
+
+    private static HashMap<String, ArrayList<Offer>> enchantmentOffers = new HashMap<>();
 
     public static List<String> religionNames = new ArrayList<>();
 
@@ -32,12 +36,24 @@ public class Religions {
     }
 
     public static boolean isBannedFood(String name) {
-        for (String religionName: religionNames) {
+        for (String religionName : religionNames) {
             if (bannedFood.get(religionName).containsKey(name)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public static ArrayList<Offer> getReligionEnchantmentOffers(String itemName, String religionName) {
+        ArrayList<Offer> result = new ArrayList<>();
+
+        for (Offer offer : enchantmentOffers.get(religionName)) {
+            if (offer.getItemName().equalsIgnoreCase(itemName)) {
+                result.add(offer);
+            }
+        }
+
+        return result;
     }
 
     public static boolean initialiseReligions() {
@@ -48,10 +64,9 @@ public class Religions {
             List<String> religions = AuroraReligions.getInstance().getConfig().getStringList("religions");
             religionNames.addAll(religions);
 
-            for (Town town: Towns.getTowns()) {
+            for (Town town : Towns.getTowns()) {
 
-                if (religionsOfTowns.containsKey(town.getName()))
-                {
+                if (religionsOfTowns.containsKey(town.getName())) {
                     TownReligion townReligion = religionsOfTowns.get(town.getName());
                     String religion = townReligion.getReligion();
                     Structure structure = townReligion.getStructure();
@@ -70,42 +85,36 @@ public class Religions {
 
             // BannedFood
 
-            for (String religionName: religionNames) {
+            for (String religionName : religionNames) {
                 bannedFood.put(religionName, new HashMap<>());
                 List<String> banned = AuroraReligions.getInstance().getConfig().getStringList("banned-food." + religionName);
 
                 if (banned.size() > 0) {
-                    for (String food: banned) {
+                    for (String food : banned) {
                         String[] food1 = food.split("!");
                         bannedFood.get(religionName).put(food1[0], food1[1]);
                     }
                 }
-            }
 
-//            List<String> chrBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.chr");
-//            List<String> musBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.mus");
-//            List<String> budBanned = AuroraReligions.getInstance().getConfig().getStringList("banned-food.bud");
-//
-//            if (chrBanned.size() > 0) {
-//                for (String food: chrBanned) {
-//                    String[] food1 = food.split("!");
-//                    bannedFoodChr.put(food1[0], food1[1]);
-//                }
-//            }
-//
-//            if (musBanned.size() > 0) {
-//                for (String food: musBanned) {
-//                    String[] food1 = food.split("!");
-//                    bannedFoodMus.put(food1[0], food1[1]);
-//                }
-//            }
-//
-//            if (budBanned.size() > 0) {
-//                for (String food: budBanned) {
-//                    String[] food1 = food.split("!");
-//                    bannedFoodBud.put(food1[0], food1[1]);
-//                }
-//            }
+                enchantmentOffers.put(religionName, new ArrayList<>());
+                List<String> offers = AuroraReligions.getInstance().getConfig().getStringList("enchantments." + religionName);
+
+                if (offers.size() > 0) {
+                    for (String string : offers) {
+                        String[] strings = string.split("!");
+                        String[] enchantmentString = strings[1].split(":");
+                        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentString[0]));
+                        if (enchantment != null) {
+                            EnchantmentOffer enchantmentOffer = new EnchantmentOffer(enchantment,
+                                    Integer.parseInt(enchantmentString[1]), Integer.parseInt(enchantmentString[2]));
+                            enchantmentOffers.get(religionName).add(new Offer(strings[0], enchantmentOffer, Integer.parseInt(enchantmentString[3])));
+                        } else {
+                            LoggerReligions.error("Can't initialise this enchantment: " + string + " in enchantments." + religionName);
+                        }
+                    }
+                }
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,7 +155,7 @@ public class Religions {
         try {
             String result = religionsOfTowns.get(townName).getReligion();
 
-            return  result;
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -179,7 +188,7 @@ public class Religions {
             }
         } else {
             String[] bidString = string.split("/");
-            for (String oneEffect: bidString) {
+            for (String oneEffect : bidString) {
                 String[] oneEffectStrings = oneEffect.split(":");
                 LoggerReligions.info(player.getName() + " took effect " + oneEffect);
 
