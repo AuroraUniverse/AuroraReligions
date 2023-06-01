@@ -33,7 +33,7 @@ public class GUIReligions {
         CommandSender sender = event.getSender();
         Town town = event.getTown();
 
-        TownReligion townReligion = Religions.getTownReligionFromHashMap(town.getName());
+        TownReligion townReligion = Religions.getTownReligion(town.getName());
 
         if (townReligion != null) {
             ItemStack stack;

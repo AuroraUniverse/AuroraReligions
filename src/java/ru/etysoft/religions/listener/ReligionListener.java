@@ -13,13 +13,12 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.etysoft.aurorauniverse.data.Residents;
 import ru.etysoft.aurorauniverse.events.*;
-import ru.etysoft.aurorauniverse.exceptions.WorldNotFoundedException;
 import ru.etysoft.aurorauniverse.world.Town;
 import ru.etysoft.religions.GUIRelision.GUIReligions;
 import ru.etysoft.religions.LoggerReligions;
-import ru.etysoft.religions.AuroraReligions;
 import ru.etysoft.religions.enchantments.Offer;
-import ru.etysoft.religions.enchantments.PlayerEnchantmentOffer;
+import ru.etysoft.religions.enchantments.PlayerEnchantmentOffers;
+import ru.etysoft.religions.logic.ReligionEffect;
 import ru.etysoft.religions.logic.Religions;
 import ru.etysoft.aurorauniverse.world.Resident;
 import ru.etysoft.religions.logic.TownReligion;
@@ -45,17 +44,19 @@ public class ReligionListener implements Listener {
 
         Resident resident = Residents.getResident(killer.getName());
 
-        TownReligion townReligion = Religions.getTownReligionFromHashMap(resident.getTownName());
+        TownReligion townReligion = Religions.getTownReligion(resident.getTownName());
 
         if (townReligion == null) return;
 
         if (!townReligion.isStructureFullBuild()) return;
 
-        String string = AuroraReligions.getInstance().getConfig().getString("event.kill." + townReligion.getReligion());
+        ArrayList<ReligionEffect> effects = ReligionEffect.getOnKillEffect(townReligion.getReligion());
 
-        if (string == null | string.equals("")) return;
+        if (effects.size() == 0) return;
 
-        Religions.giveEffectOnPlayer(killer, string);
+        for (ReligionEffect effect: effects) {
+            ReligionEffect.giveEffectToPlayer(killer, effect);
+        }
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
@@ -66,11 +67,11 @@ public class ReligionListener implements Listener {
 
         String itemName = item.getType().name();
 
-        if (!Religions.isBannedFood(itemName)) return;
+        if (!ReligionEffect.isBannedFood(itemName)) return;
 
         Resident resident = Residents.getResident(player.getName());
 
-        TownReligion townReligion = Religions.getTownReligionFromHashMap(resident.getTownName());
+        TownReligion townReligion = Religions.getTownReligion(resident.getTownName());
 
         if (townReligion == null) return;
 
@@ -78,11 +79,17 @@ public class ReligionListener implements Listener {
 
         String religion = townReligion.getReligion();
 
-        String effectName = Religions.getBannedFood(religion).get(itemName);
+        ArrayList<ReligionEffect> effects = ReligionEffect.getBannedFoodEffects(religion, itemName);
 
-        if (effectName == null) return;
+        LoggerReligions.info(itemName + " hello from listener");
 
-        Religions.giveEffectOnPlayer(player, effectName);
+        if (effects.size() == 0) return;
+
+        for (ReligionEffect effect: effects) {
+            LoggerReligions.info(effect.getName() + " // " + effect.getLVL() + " // " + effect.getPossibility());
+            ReligionEffect.giveEffectToPlayer(player, effect);
+        }
+        LoggerReligions.info(itemName + " hello from listener 2");
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
@@ -106,7 +113,7 @@ public class ReligionListener implements Listener {
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onSendTownInfoEvent(SendTownInfoEvent event) {
         try {
-            TownReligion townReligion = Religions.getTownReligionFromHashMap(event.getTown().getName());
+            TownReligion townReligion = Religions.getTownReligion(event.getTown().getName());
 
             if (townReligion == null) return;
 
@@ -121,7 +128,7 @@ public class ReligionListener implements Listener {
     public void onPreTownGetTaxEvent(PreTownGetTaxEvent event) {
         Town town = event.getTown();
 
-        TownReligion townReligion = Religions.getTownReligionFromHashMap(town.getName());
+        TownReligion townReligion = Religions.getTownReligion(town.getName());
 
         if (townReligion != null) {
             townReligion.updateReligionTax(town);
@@ -132,19 +139,21 @@ public class ReligionListener implements Listener {
     public void onPrepareItemEnchantEvent(PrepareItemEnchantEvent event) {
 
         Player player = event.getEnchanter();
-        PlayerEnchantmentOffer playerEnchantmentOffer = PlayerEnchantmentOffer.getPlayerEnchantmentOffers(player.getName());
+        PlayerEnchantmentOffers playerEnchantmentOffers =
+                PlayerEnchantmentOffers.getPlayerEnchantmentOffers(player.getName());
         String itemName = event.getItem().getType().name();
 
         Resident resident = Residents.getResident(player.getName());
-        TownReligion townReligion = Religions.getTownReligionFromHashMap(resident.getTownName());
+        TownReligion townReligion = Religions.getTownReligion(resident.getTownName());
         if (townReligion == null) return;
 
         Offer offer = null;
         boolean needRandom = true;
 
-        if (playerEnchantmentOffer != null) {
+        // check if offer for this item is defined
+        if (playerEnchantmentOffers != null) {
 
-            for (Offer thisOffer: playerEnchantmentOffer.getOffers()) {
+            for (Offer thisOffer: playerEnchantmentOffers.getOffers()) {
                 if (thisOffer.getItemName().equals(itemName)) {
                     offer = thisOffer;
                     needRandom = false;
@@ -152,9 +161,11 @@ public class ReligionListener implements Listener {
                 }
             }
         }
+
+        // generate offer if it doesn't exist
         if (needRandom) {
 
-            ArrayList<Offer> offers = Religions.getReligionEnchantmentOffers(itemName, townReligion.getReligion());
+            ArrayList<Offer> offers = PlayerEnchantmentOffers.getReligionEnchantmentOffers(itemName, townReligion.getReligion());
 
             if (offers.size() == 0) return;
 
@@ -177,13 +188,14 @@ public class ReligionListener implements Listener {
             }
 
             if (offer == null) {
-                PlayerEnchantmentOffer.AddPlayerOffer(player, itemName, null);
+                PlayerEnchantmentOffers.AddPlayerOffer(player, itemName, null);
             } else {
-                PlayerEnchantmentOffer.AddPlayerOffer(player, itemName, offer.getEnchantmentOffer());
+                PlayerEnchantmentOffers.AddPlayerOffer(player, itemName, offer.getEnchantmentOffer());
             }
 
         }
 
+        // place enchantmentOffer in gui
         if (offer != null) {
             if (offer.getEnchantmentOffer() != null) {
                 int position;
@@ -213,20 +225,20 @@ public class ReligionListener implements Listener {
             }
         }
 
-        if (playerEnchantmentOffer == null) PlayerEnchantmentOffer.
+        if (playerEnchantmentOffers == null) PlayerEnchantmentOffers.
                 getPlayerEnchantmentOffers(player.getName()).setCurrentOffer(offer);
-        else playerEnchantmentOffer.setCurrentOffer(offer);
+        else playerEnchantmentOffers.setCurrentOffer(offer);
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.NORMAL)
     public void onEnchantItemEvent(EnchantItemEvent event) {
 
-        PlayerEnchantmentOffer playerEnchantmentOffer =
-                PlayerEnchantmentOffer.getPlayerEnchantmentOffers(event.getEnchanter().getName());
+        PlayerEnchantmentOffers playerEnchantmentOffers =
+                PlayerEnchantmentOffers.getPlayerEnchantmentOffers(event.getEnchanter().getName());
 
-        if (playerEnchantmentOffer == null) return;
+        if (playerEnchantmentOffers == null) return;
 
-        Offer currentOffer = playerEnchantmentOffer.getCurrentOffer();
+        Offer currentOffer = playerEnchantmentOffers.getCurrentOffer();
 
         if (currentOffer != null) {
             if (currentOffer.getEnchantmentOffer() != null) {
@@ -240,7 +252,7 @@ public class ReligionListener implements Listener {
             }
         }
 
-        PlayerEnchantmentOffer.ClearPlayerOffers(event.getEnchanter().getName());
+        PlayerEnchantmentOffers.ClearPlayerOffers(event.getEnchanter().getName());
     }
 
 
