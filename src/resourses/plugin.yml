@@ -1,5 +1,5 @@
 name: AuroraReligions
-version: 0.1.2
+version: 0.1.5
 main: ru.etysoft.religions.AuroraReligions
 depend: [EasyPluginCore, AuroraUniverse]
 api-version: 1.13

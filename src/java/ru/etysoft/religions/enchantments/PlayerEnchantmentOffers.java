@@ -78,6 +78,7 @@ public class PlayerEnchantmentOffers {
     }
 
     public static void initialiseEnchantments() {
+        enchantmentOffers.clear();
         for (String religionName : Religions.religionNames) {
 
             enchantmentOffers.put(religionName, new ArrayList<>());
@@ -87,11 +88,11 @@ public class PlayerEnchantmentOffers {
                 for (String string : offers) {
                     String[] strings = string.split("!");
                     String[] enchantmentString = strings[1].split(":");
-                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentString[0]));
+                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentString[0].toLowerCase()));
                     if (enchantment != null) {
                         EnchantmentOffer enchantmentOffer = new EnchantmentOffer(enchantment,
                                 Integer.parseInt(enchantmentString[1]), Integer.parseInt(enchantmentString[2]));
-                        enchantmentOffers.get(religionName).add(new Offer(strings[0], enchantmentOffer, Integer.parseInt(enchantmentString[3])));
+                        enchantmentOffers.get(religionName).add(new Offer(strings[0].toUpperCase(), enchantmentOffer, Integer.parseInt(enchantmentString[3])));
                     } else {
                         LoggerReligions.error("Can't initialise this enchantment: " + string + " in enchantments." + religionName);
                     }

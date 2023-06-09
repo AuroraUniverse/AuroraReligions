@@ -1,6 +1,5 @@
-version: 0.1.4
+version: 0.1.5
 language: russian
-
 
 
 ## Config
@@ -88,9 +87,15 @@ russian:
   new-chr-town: "&fТеперь религия вашего города &bХристианство"
   new-mus-town: "&fТеперь религия вашего города &bМусульманство"
   new-bud-town: "&fТеперь религия вашего города &bБуддизм"
-  mus: "&bМусульманство"
+
   chr: "&bХристианство"
+  mus: "&bМусульманство"
   bud: "&bБуддизм"
+
+  chr-lore: "fdfdf"
+  mus-lore: "fdfdf"
+  bud-lore: "fdfdfd"
+
   religion: "&eРелигия"
   religion-deleted: "&fРелигия вашего города была удалена"
   not-enough-money: "&fНедостаточно средств!"

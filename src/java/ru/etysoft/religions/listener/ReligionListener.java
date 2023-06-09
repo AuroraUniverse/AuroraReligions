@@ -23,9 +23,7 @@ import ru.etysoft.religions.logic.Religions;
 import ru.etysoft.aurorauniverse.world.Resident;
 import ru.etysoft.religions.logic.TownReligion;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ReligionListener implements Listener {
 
@@ -245,9 +243,27 @@ public class ReligionListener implements Listener {
                 if (currentOffer.getEnchantmentOffer().getCost() == event.getExpLevelCost()) {
                     Map<Enchantment, Integer> map = event.getEnchantsToAdd();
 
-                    map.clear();
+                    map.remove(map.keySet().iterator().next());
                     map.put(currentOffer.getEnchantmentOffer().getEnchantment(),
                             currentOffer.getEnchantmentOffer().getEnchantmentLevel());
+
+//                    HashMap<Enchantment, Integer> newMap = new HashMap<>();
+//
+//                    int i = 0;
+//                    for (Enchantment enchantment: map.keySet()) {
+//                        if (i != 0) {
+//                            newMap.put(enchantment, map.get(enchantment));
+//                        }
+//                        i++;
+//                    }
+//
+//                    map.clear();
+//                    map.put(currentOffer.getEnchantmentOffer().getEnchantment(),
+//                            currentOffer.getEnchantmentOffer().getEnchantmentLevel());
+//
+//                    for (Enchantment enchantment: newMap.keySet()) {
+//                        map.put(enchantment, newMap.get(enchantment));
+//                    }
                 }
             }
         }

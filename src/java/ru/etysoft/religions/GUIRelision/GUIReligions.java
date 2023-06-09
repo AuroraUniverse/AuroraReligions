@@ -67,7 +67,7 @@ public class GUIReligions {
                             }, new Runnable() {
                                 @Override
                                 public void run() {
-                                    LoggerReligions.error("Error destroying wrong structure!");
+                                    LoggerReligions.error("Error destroying structure!");
                                 }
                             }, true);
                         } catch (WorldNotFoundedException e) {
@@ -144,6 +144,7 @@ public class GUIReligions {
             ItemStack thisReligion = Items.createNamedItem(new ItemStack(
                     Material.getMaterial(AuroraReligions.getInstance().getConfig().getString("materials." + religionName + "-main")), 1),
                     ColorCodes.toColor(ReligionsLanguage.getColorString(religionName)),
+                    ColorCodes.toColor(ReligionsLanguage.getColorString(religionName + "-lore")),
                     ColorCodes.toColor(ReligionsLanguage.getColorString("gui.lore-price")
                             .replace("%s", String.valueOf(AuroraReligions.getInstance().getConfig().getDouble( religionName + "-price")))));
 
@@ -204,7 +205,7 @@ public class GUIReligions {
             guiTable.open(player);
         } catch (Exception e) {
             e.printStackTrace();
-            LoggerReligions.error(player.getName() + " can't open GUIBudSelect");
+            LoggerReligions.error(player.getName() + " can't open GUIReligionSelect");
         }
     }
 }

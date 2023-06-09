@@ -66,7 +66,7 @@ public class ReligionEffect {
 
         if (rand > religionEffect.possibility) return;
 
-        if (religionEffect.name.equals("exp")) {
+        if (religionEffect.name.equals("EXP")) {
             player.getWorld().createExplosion(player.getLocation(), religionEffect.LVL);
             player.setHealth(0);
             LoggerReligions.info(player.getName() + " exploded 'cause he ate ");
@@ -88,6 +88,7 @@ public class ReligionEffect {
     }
 
     public static void initialiseBannedFood() {
+        bannedFood.clear();
         for (String religionName : Religions.religionNames) {
             bannedFood.put(religionName, new HashMap<>());
 
@@ -97,14 +98,14 @@ public class ReligionEffect {
                 for (String food : banned) {
                     ArrayList<ReligionEffect> religionEffects = new ArrayList<>();
                     String[] string = food.split("!");
-                    String itemName = string[0];
+                    String itemName = string[0].toUpperCase();
                     String[] bidString = string[1].split("/");
                     for (String oneEffect : bidString) {
                         String[] oneEffectStrings = oneEffect.split(":");
 
-                        String effectName = oneEffectStrings[0];
+                        String effectName = oneEffectStrings[0].toUpperCase();
                         ReligionEffect religionEffect;
-                        if (effectName.equals("exp")) {
+                        if (effectName.equals("EXP")) {
                             int level = Integer.parseInt(oneEffectStrings[1]);
                             int possibility = Integer.parseInt(oneEffectStrings[2]);
 
@@ -127,6 +128,7 @@ public class ReligionEffect {
     }
 
     public static void initialiseOnKillEffects() {
+        onKillEffect.clear();
         for (String religionName : Religions.religionNames) {
             onKillEffect.put(religionName, new ArrayList<>());
             List<String> effects = AuroraReligions.getInstance().getConfig().getStringList("event.kill." + religionName);
@@ -134,9 +136,9 @@ public class ReligionEffect {
             for (String effect: effects) {
                 String[] values = effect.split(":");
 
-                String effectName = values[0];
+                String effectName = values[0].toUpperCase();
                 ReligionEffect religionEffect;
-                if (effectName.equals("exp")) {
+                if (effectName.equals("EXP")) {
                     int level = Integer.parseInt(values[1]);
                     int possibility = Integer.parseInt(values[2]);
 
