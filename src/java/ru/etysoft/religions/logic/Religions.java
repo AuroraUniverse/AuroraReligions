@@ -24,6 +24,7 @@ public class Religions {
         boolean status = true;
 
         try {
+            religionNames.clear();
             List<String> religions = AuroraReligions.getInstance().getConfig().getStringList("religions");
             religionNames.addAll(religions);
 
@@ -31,16 +32,9 @@ public class Religions {
 
                 if (religionsOfTowns.containsKey(town.getName())) {
                     TownReligion townReligion = religionsOfTowns.get(town.getName());
-                    String religion = townReligion.getReligion();
-                    Structure structure = townReligion.getStructure();
 
-                    boolean isFullBuilt = townReligion.getStructure().isFullBuilt();
-
-                    if (isFullBuilt) {
-                        // Chunk Tax
-                        double chunkTaxMultiplier = AuroraReligions.getInstance().getConfig().getDouble("chunk-tax." + religion);
-
-                        town.setTownChunkTaxMultiplier(AuroraReligions.getInstance().getDescription().getName(), chunkTaxMultiplier);
+                    if (!religionNames.contains(townReligion.getReligion())) {
+                        religionsOfTowns.remove(town.getName());
                     }
 
                 }

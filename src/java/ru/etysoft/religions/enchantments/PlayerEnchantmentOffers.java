@@ -86,15 +86,19 @@ public class PlayerEnchantmentOffers {
 
             if (offers.size() > 0) {
                 for (String string : offers) {
-                    String[] strings = string.split("!");
-                    String[] enchantmentString = strings[1].split(":");
-                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentString[0].toLowerCase()));
-                    if (enchantment != null) {
-                        EnchantmentOffer enchantmentOffer = new EnchantmentOffer(enchantment,
-                                Integer.parseInt(enchantmentString[1]), Integer.parseInt(enchantmentString[2]));
-                        enchantmentOffers.get(religionName).add(new Offer(strings[0].toUpperCase(), enchantmentOffer, Integer.parseInt(enchantmentString[3])));
-                    } else {
-                        LoggerReligions.error("Can't initialise this enchantment: " + string + " in enchantments." + religionName);
+                    try {
+                        String[] strings = string.split("!");
+                        String[] enchantmentString = strings[1].split(":");
+                        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentString[0].toLowerCase()));
+                        if (enchantment != null) {
+                            EnchantmentOffer enchantmentOffer = new EnchantmentOffer(enchantment,
+                                    Integer.parseInt(enchantmentString[1]), Integer.parseInt(enchantmentString[2]));
+                            enchantmentOffers.get(religionName).add(new Offer(strings[0].toUpperCase(), enchantmentOffer, Integer.parseInt(enchantmentString[3])));
+                        } else {
+                            LoggerReligions.error("Can't initialise this enchantment: " + string + " in enchantments." + religionName);
+                        }
+                    } catch (Exception e) {
+                        LoggerReligions.error("Can't initialise enchantment " + string);
                     }
                 }
             }

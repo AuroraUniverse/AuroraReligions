@@ -79,15 +79,13 @@ public class ReligionListener implements Listener {
 
         ArrayList<ReligionEffect> effects = ReligionEffect.getBannedFoodEffects(religion, itemName);
 
-        LoggerReligions.info(itemName + " hello from listener");
+        if (effects == null) return;
 
         if (effects.size() == 0) return;
 
         for (ReligionEffect effect: effects) {
-            LoggerReligions.info(effect.getName() + " // " + effect.getLVL() + " // " + effect.getPossibility());
             ReligionEffect.giveEffectToPlayer(player, effect);
         }
-        LoggerReligions.info(itemName + " hello from listener 2");
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)

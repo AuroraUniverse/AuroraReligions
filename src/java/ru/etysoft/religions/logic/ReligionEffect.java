@@ -74,8 +74,6 @@ public class ReligionEffect {
             player.addPotionEffect(new PotionEffect(Objects.requireNonNull(
                     PotionEffectType.getByName(religionEffect.name)), religionEffect.duration, religionEffect.LVL));
         }
-
-        LoggerReligions.info(religionEffect.name + " !!!!!!!!!!");
     }
 
     public static boolean isBannedFood(String name) {
@@ -97,31 +95,35 @@ public class ReligionEffect {
             if (banned.size() > 0) {
                 for (String food : banned) {
                     ArrayList<ReligionEffect> religionEffects = new ArrayList<>();
-                    String[] string = food.split("!");
-                    String itemName = string[0].toUpperCase();
-                    String[] bidString = string[1].split("/");
-                    for (String oneEffect : bidString) {
-                        String[] oneEffectStrings = oneEffect.split(":");
+                    try {
+                        String[] string = food.split("!");
+                        String itemName = string[0].toUpperCase();
+                        String[] bidString = string[1].split("/");
+                        for (String oneEffect : bidString) {
+                            String[] oneEffectStrings = oneEffect.split(":");
 
-                        String effectName = oneEffectStrings[0].toUpperCase();
-                        ReligionEffect religionEffect;
-                        if (effectName.equals("EXP")) {
-                            int level = Integer.parseInt(oneEffectStrings[1]);
-                            int possibility = Integer.parseInt(oneEffectStrings[2]);
+                            String effectName = oneEffectStrings[0].toUpperCase();
+                            ReligionEffect religionEffect;
+                            if (effectName.equals("EXP")) {
+                                int level = Integer.parseInt(oneEffectStrings[1]);
+                                int possibility = Integer.parseInt(oneEffectStrings[2]);
 
-                            religionEffect = new ReligionEffect(effectName, level, possibility);
-                        } else {
+                                religionEffect = new ReligionEffect(effectName, level, possibility);
+                            } else {
 
-                            int timeOfEffect = Integer.parseInt(oneEffectStrings[1]) * 20;
-                            int levelOfEffect = Integer.parseInt(oneEffectStrings[2]);
-                            int possibility = Integer.parseInt(oneEffectStrings[3]);
+                                int timeOfEffect = Integer.parseInt(oneEffectStrings[1]) * 20;
+                                int levelOfEffect = Integer.parseInt(oneEffectStrings[2]);
+                                int possibility = Integer.parseInt(oneEffectStrings[3]);
 
-                            religionEffect = new ReligionEffect(effectName, timeOfEffect, levelOfEffect, possibility);
+                                religionEffect = new ReligionEffect(effectName, timeOfEffect, levelOfEffect, possibility);
+                            }
+
+                            religionEffects.add(religionEffect);
                         }
-
-                        religionEffects.add(religionEffect);
+                        bannedFood.get(religionName).put(itemName, religionEffects);
+                    } catch (Exception e) {
+                        LoggerReligions.error("Can't initialise " + food);
                     }
-                    bannedFood.get(religionName).put(itemName, religionEffects);
                 }
             }
         }
@@ -134,25 +136,29 @@ public class ReligionEffect {
             List<String> effects = AuroraReligions.getInstance().getConfig().getStringList("event.kill." + religionName);
 
             for (String effect: effects) {
-                String[] values = effect.split(":");
+                try {
+                    String[] values = effect.split(":");
 
-                String effectName = values[0].toUpperCase();
-                ReligionEffect religionEffect;
-                if (effectName.equals("EXP")) {
-                    int level = Integer.parseInt(values[1]);
-                    int possibility = Integer.parseInt(values[2]);
+                    String effectName = values[0].toUpperCase();
+                    ReligionEffect religionEffect;
+                    if (effectName.equals("EXP")) {
+                        int level = Integer.parseInt(values[1]);
+                        int possibility = Integer.parseInt(values[2]);
 
-                    religionEffect = new ReligionEffect(effectName, level, possibility);
-                } else {
+                        religionEffect = new ReligionEffect(effectName, level, possibility);
+                    } else {
 
-                    int timeOfEffect = Integer.parseInt(values[1]) * 20;
-                    int levelOfEffect = Integer.parseInt(values[2]);
-                    int possibility = Integer.parseInt(values[3]);
+                        int timeOfEffect = Integer.parseInt(values[1]) * 20;
+                        int levelOfEffect = Integer.parseInt(values[2]);
+                        int possibility = Integer.parseInt(values[3]);
 
-                    religionEffect = new ReligionEffect(effectName, timeOfEffect, levelOfEffect, possibility);
+                        religionEffect = new ReligionEffect(effectName, timeOfEffect, levelOfEffect, possibility);
+                    }
+
+                    onKillEffect.get(religionName).add(religionEffect);
+                } catch (Exception e) {
+                    LoggerReligions.error("Can't initialise " + effect);
                 }
-
-                onKillEffect.get(religionName).add(religionEffect);
 
             }
         }
